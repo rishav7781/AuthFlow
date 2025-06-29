@@ -60,11 +60,11 @@ This project is designed primarily for **learning purposes**—to help you under
      docker exec -i truecaller_login_api_db_1 psql -U postgres -d truecaller_db < init.sql
      ```
 5. **Access the API:**
-   - The API should be running at `http://localhost:3000`. Check the Swagger docs at `http://localhost:3000/api-docs`.
+   - The API should be running at `http://localhost:5000`. Check the Swagger docs at `http://localhost:5000/api-docs`.
 
 ## API Documentation
 
-API documentation is available via Swagger UI. After starting the project, access it at `http://localhost:3000/api-docs`.
+API documentation is available via Swagger UI. After starting the project, access it at `http://localhost:5000/api-docs`.
 
 
 
