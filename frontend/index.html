@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AuthFlow</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="header">
+    <h1><i class="fas fa-shield-alt"></i> AuthFlow</h1>
+  </div>
+
+  <div class="container">
+    <div id="loginPage" class="card">
+      <h2>Welcome Back</h2>
+      <form id="loginForm">
+        <input type="text" id="loginName" placeholder="Name" required>
+        <input type="tel" id="loginMobile" placeholder="Mobile Number" required>
+        <button type="submit">Login</button>
+      </form>
+      <p class="switch">No account? <a href="#" onclick="showPage('signupPage')">Sign up</a></p>
+    </div>
+
+    <div id="signupPage" class="card hidden">
+      <h2>Create Account</h2>
+      <form id="signupForm">
+        <input type="text" id="signupName" placeholder="Name" required>
+        <input type="tel" id="signupMobile" placeholder="Mobile" required>
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <textarea id="signupAddress" placeholder="Address" required></textarea>
+        <button type="submit">Sign Up</button>
+      </form>
+      <p class="switch">Have an account? <a href="#" onclick="showPage('loginPage')">Login</a></p>
+    </div>
+
+    <div id="profilePage" class="card hidden">
+      <h2 id="profileName">Profile</h2>
+      <p id="profileMobile"></p>
+      <p id="profileEmail"></p>
+      <p id="profileAddress"></p>
+      <button onclick="showPage('contactsPage')">Upload Contacts</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <div id="contactsPage" class="card hidden">
+      <h2>Upload Contacts</h2>
+      <textarea id="contactsInput" placeholder="Mobile numbers..."></textarea>
+      <button onclick="uploadContacts()">Upload</button>
+      <button onclick="showPage('profilePage')">Back</button>
+    </div>
+
+    <div id="contactsResultPage" class="card hidden">
+      <h2>Results</h2>
+      <div id="foundContacts"></div>
+      <div id="notFoundContacts"></div>
+      <button onclick="showPage('contactsPage')">Search Again</button>
+      <button onclick="showPage('profilePage')">Back</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

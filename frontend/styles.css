@@ -1,0 +1,60 @@
+body {
+  font-family: sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  margin: 0;
+}
+
+.header {
+  background: rgba(255,255,255,0.1);
+  padding: 1rem;
+  text-align: center;
+  color: #fff;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.hidden {
+  display: none;
+}
+
+input, textarea, button {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  background: #667eea;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a67d8;
+}
+
+.switch {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
