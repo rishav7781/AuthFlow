@@ -35,30 +35,21 @@ This project is designed primarily for **learning purposes**—to help you under
    git clone <your-repo-url>
    cd Truecaller-Based JWT Authentication System/truecaller_login_api
    ```
-2. **Build and run the Docker containers:**
+2. **Create a `.env` file in the backend directory:**
+   ```
+   DATABASE_URL=
+   JWT_EXPIRES_IN=90d
+   PORT=5000
+   ```
+   - Replace `your_jwt_secret_here` with a strong secret string.
+   - Ensure the database name, user, and password match your Docker/Postgres setup.
+3. **Build and run the Docker containers:**
    ```sh
    docker-compose up --build
    ```
-3. **Initialize the database:**
-   - Access the PostgreSQL container:
-     ```sh
-     docker exec -it truecaller_login_api_db_1 psql -U postgres
-     ```
-   - Create the database and user:
-     ```sql
-     CREATE DATABASE truecaller_db;
-     CREATE USER truecaller_user WITH ENCRYPTED PASSWORD 'password';
-     GRANT ALL PRIVILEGES ON DATABASE truecaller_db TO truecaller_user;
-     ```
-   - Exit the PostgreSQL prompt:
-     ```sql
-     \q
-     ```
-4. **Import the initial data (optional):**
-   - If you have an `init.sql` file with initial data, import it using:
-     ```sh
-     docker exec -i truecaller_login_api_db_1 psql -U postgres -d truecaller_db < init.sql
-     ```
+4. **Database Table Creation:**
+   - The backend will automatically check for and create the `users` table on startup. **You do not need to manually run any SQL.**
+   - If the table already exists, nothing will be changed.
 5. **Access the API:**
    - The API should be running at `http://localhost:5000`. Check the Swagger docs at `http://localhost:5000/api-docs`.
 
@@ -66,7 +57,106 @@ This project is designed primarily for **learning purposes**—to help you under
 
 API documentation is available via Swagger UI. After starting the project, access it at `http://localhost:5000/api-docs`.
 
+---
 
+## API Endpoints
+
+### POST /login
+- **Description:** Login or register a user (Truecaller-style). If the user does not exist, registers them. Returns a JWT token in an HTTP-only cookie.
+- **Request Body:**
+  ```json
+  {
+    "name": "John Doe",
+    "mobile": "9876543210",
+    "email": "john@example.com", // optional
+    "address": "123 Main St"      // optional
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "Login successful",
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "mobile": "9876543210",
+      "email": "john@example.com",
+      "address": "123 Main St"
+    }
+  }
+  ```
+
+### POST /signup
+- **Description:** Register a new user. All fields are required.
+- **Request Body:**
+  ```json
+  {
+    "name": "John Doe",
+    "mobile": "9876543210",
+    "email": "john@example.com",
+    "address": "123 Main St"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "User registered successfully"
+  }
+  ```
+
+### GET /profile
+- **Description:** Get user profile by JWT token (requires authentication via cookie).
+- **Response:**
+  ```json
+  {
+    "id": 1,
+    "name": "John Doe",
+    "mobile": "9876543210",
+    "email": "john@example.com",
+    "address": "123 Main St"
+  }
+  ```
+- **Errors:** 401 Unauthorized if not logged in or token is invalid.
+
+### POST /contacts/search
+- **Description:** Upload a list of mobile numbers to find which are registered in the system. Requires authentication (JWT cookie).
+- **Request Body:**
+  ```json
+  {
+    "contacts": ["9876543210", "9123456789"]
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "found": [
+      { "name": "John Doe", "mobile": "9876543210" }
+    ],
+    "notFound": ["9123456789"]
+  }
+  ```
+
+### POST /logout
+- **Description:** Logout the current user. Clears the JWT token cookie.
+- **Response:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+---
+
+## Troubleshooting
+
+- **500 Internal Server Error on Signup/Login:**
+  - Ensure your `.env` file is present and correct.
+  - Make sure PostgreSQL is running and accessible at the address in `DATABASE_URL`.
+  - The backend will auto-create the `users` table if it does not exist.
+  - Check the backend terminal for detailed error logs.
+- **Frontend not connecting:**
+  - Make sure the backend is running at `http://127.0.0.1:5000` and CORS is enabled.
+  - Open `frontend/index.html` in your browser and use the app.
 
 ---
 
