@@ -182,20 +182,70 @@ textarea {
 }
 
 @media (max-width: 600px) {
+  html {
+    font-size: 17px;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    padding-bottom: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
   .card {
     padding: 1.2rem 0.7rem;
     max-width: 98vw;
+    font-size: 1.05rem;
   }
   .container {
-    padding: 1rem 0.2rem 5rem 0.2rem;
+    padding: 1rem 0.2rem 1rem 0.2rem;
+    min-height: unset;
   }
   .navbar, .footer {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+    font-size: 1.1rem;
+  }
+  .footer {
+    position: static;
+    width: 100%;
+    margin-top: 2rem;
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .profile-header {
     flex-direction: column;
     gap: 0.7rem;
     align-items: flex-start;
+  }
+  input, textarea, button {
+    font-size: 1.1rem;
+    min-height: 44px;
+    margin-bottom: 1.2rem;
+  }
+  button {
+    min-height: 48px;
+    font-size: 1.1rem;
+  }
+  .profile-actions, .contacts-actions {
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  .switch {
+    font-size: 1rem;
+    margin-top: 1.2rem;
+  }
+  .notification {
+    font-size: 1.05rem;
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 400px) {
+  html {
+    font-size: 15px;
+  }
+  .card {
+    padding: 0.7rem 0.2rem;
   }
 }

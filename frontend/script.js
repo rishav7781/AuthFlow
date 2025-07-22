@@ -5,6 +5,24 @@ function showPage(id) {
   document.querySelectorAll('.card').forEach(e => e.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   clearNotification();
+
+  // Clear form fields when switching pages
+  if (id === 'loginPage') {
+    document.getElementById('loginName').value = '';
+    document.getElementById('loginMobile').value = '';
+  } else if (id === 'signupPage') {
+    document.getElementById('signupName').value = '';
+    document.getElementById('signupMobile').value = '';
+    document.getElementById('signupEmail').value = '';
+    document.getElementById('signupAddress').value = '';
+    // Scroll signup button into view for accessibility
+    setTimeout(() => {
+      const btn = document.querySelector('#signupForm button[type="submit"]');
+      if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  } else if (id === 'contactsPage') {
+    document.getElementById('contactsInput').value = '';
+  }
 }
 
 function showNotification(message, type = 'error') {
