@@ -43,7 +43,8 @@ function showLoading(show = true) {
 async function apiRequest(endpoint, method = 'GET', data = null) {
   const options = { method,
     headers: { 'Content-Type': 'application/json' },
-   // credentials: 'include' };
+   // credentials: 'include'
+    };
   if (data) options.body = JSON.stringify(data);
   try {
     const res = await fetch(`${API_BASE_URL}${endpoint}`, options);
