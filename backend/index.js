@@ -30,8 +30,8 @@ require("dotenv").config();
 const app = express();
 
 app.use(cors({
-  origin: "*",
-  //credentials: true
+  origin: 'https://auth-flow-ruddy.vercel.app',
+  credentials: true
 }));
 // Middleware
 app.use(express.json());
