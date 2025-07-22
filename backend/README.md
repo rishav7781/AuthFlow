@@ -37,8 +37,7 @@ This project is designed primarily for **learning purposes**—to help you under
    ```
 2. **Create a `.env` file in the backend directory:**
    ```
-   DATABASE_URL=postgresql://postgres:admin404@localhost:5432/Truecaller_Based_JWT_db
-   JWT_SECRET=your_jwt_secret_here
+   DATABASE_URL=
    JWT_EXPIRES_IN=90d
    PORT=5000
    ```
@@ -57,6 +56,94 @@ This project is designed primarily for **learning purposes**—to help you under
 ## API Documentation
 
 API documentation is available via Swagger UI. After starting the project, access it at `http://localhost:5000/api-docs`.
+
+---
+
+## API Endpoints
+
+### POST /login
+- **Description:** Login or register a user (Truecaller-style). If the user does not exist, registers them. Returns a JWT token in an HTTP-only cookie.
+- **Request Body:**
+  ```json
+  {
+    "name": "John Doe",
+    "mobile": "9876543210",
+    "email": "john@example.com", // optional
+    "address": "123 Main St"      // optional
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "Login successful",
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "mobile": "9876543210",
+      "email": "john@example.com",
+      "address": "123 Main St"
+    }
+  }
+  ```
+
+### POST /signup
+- **Description:** Register a new user. All fields are required.
+- **Request Body:**
+  ```json
+  {
+    "name": "John Doe",
+    "mobile": "9876543210",
+    "email": "john@example.com",
+    "address": "123 Main St"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "User registered successfully"
+  }
+  ```
+
+### GET /profile
+- **Description:** Get user profile by JWT token (requires authentication via cookie).
+- **Response:**
+  ```json
+  {
+    "id": 1,
+    "name": "John Doe",
+    "mobile": "9876543210",
+    "email": "john@example.com",
+    "address": "123 Main St"
+  }
+  ```
+- **Errors:** 401 Unauthorized if not logged in or token is invalid.
+
+### POST /contacts/search
+- **Description:** Upload a list of mobile numbers to find which are registered in the system. Requires authentication (JWT cookie).
+- **Request Body:**
+  ```json
+  {
+    "contacts": ["9876543210", "9123456789"]
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "found": [
+      { "name": "John Doe", "mobile": "9876543210" }
+    ],
+    "notFound": ["9123456789"]
+  }
+  ```
+
+### POST /logout
+- **Description:** Logout the current user. Clears the JWT token cookie.
+- **Response:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
 
 ---
 

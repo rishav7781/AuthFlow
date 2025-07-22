@@ -41,6 +41,49 @@ app.use(cookieParser());
 swaggerDocs(app);
 
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Login or register a user (Truecaller-style)
+ *     description: Logs in a user by mobile number and name. If the user does not exist, registers them. Returns a JWT token in an HTTP-only cookie.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - mobile
+ *             properties:
+ *               name:
+ *                 type: string
+ *               mobile:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Missing or invalid input
+ *       500:
+ *         description: Server error
+ */
 // Login route (Truecaller Mock)
 app.post("/login", async (req, res) => {
   const { name, mobile, email, address } = req.body;
@@ -72,6 +115,49 @@ app.post("/login", async (req, res) => {
   }
 });
  
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: Register a new user
+ *     description: Registers a new user with name, mobile, email, and address.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - mobile
+ *               - email
+ *               - address
+ *             properties:
+ *               name:
+ *                 type: string
+ *               mobile:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Missing or invalid input, or user already exists
+ *       500:
+ *         description: Server error
+ */
 // Signup route
 app.post('/signup', async (req, res) => {
   const { name, mobile, email, address } = req.body;
@@ -151,6 +237,55 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /contacts/search:
+ *   post:
+ *     summary: Search for registered contacts
+ *     description: Upload a list of mobile numbers to find which are registered in the system. Requires authentication (JWT cookie).
+ *     tags:
+ *       - Contacts
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - contacts
+ *             properties:
+ *               contacts:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Search results
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 found:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                       mobile:
+ *                         type: string
+ *                 notFound:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
 // Contacts search route
 app.post("/contacts/search", async (req, res) => {
   const token = req.cookies.token;
@@ -183,6 +318,25 @@ app.post("/contacts/search", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout the current user
+ *     description: Clears the JWT token cookie and logs out the user.
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 // Logout route
 app.post('/logout', (req, res) => {
   res.clearCookie("token");
@@ -195,3 +349,22 @@ app.post('/logout', (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         mobile:
+ *           type: string
+ *         email:
+ *           type: string
+ *         address:
+ *           type: string
+ */
