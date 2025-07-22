@@ -106,7 +106,8 @@ app.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 90 * 24 * 60 * 60 * 1000,
-      sameSite: 'lax' // or 'none' if using HTTPS
+      sameSite: 'none', // <-- important for cross-site
+      secure: true      // <-- important for HTTPS
     });
     res.json({ message: "Login successful", user });
   } catch (err) {
