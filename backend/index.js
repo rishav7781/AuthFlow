@@ -9,6 +9,24 @@ const cors = require("cors");
 
 require("dotenv").config();
 
+(async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        mobile VARCHAR(20) UNIQUE NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        address TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("users table checked/created");
+  } catch (err) {
+    console.error("Error creating users table:", err.message);
+  }
+})();
+
 const app = express();
 
 app.use(cors({
@@ -26,41 +44,12 @@ swaggerDocs(app);
 // Login route (Truecaller Mock)
 app.post("/login", async (req, res) => {
   const { name, mobile, email, address } = req.body;
-/**
- * @swagger
- * /login:
- *   post:
- *     summary: Truecaller-style login
- *     description: Create a new user or login existing one based on mobile number.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: Rishav
- *               mobile:
- *                 type: string
- *                 example: "9876543210"
- *               email:
- *                 type: string
- *                 example: rishav@example.com
- *               address:
- *                 type: string
- *                 example: "Delhi"
- *     responses:
- *       200:
- *         description: Login successful
- *       400:
- *         description: Name & Mobile No required
- *       500:
- *         description: Server error
- */
   if (!name || !mobile) {
     return res.status(400).json({ message: "Name & Mobile No required" });
+  }
+  // Additional validation: mobile must be 10 digits
+  if (!/^\d{10}$/.test(mobile)) {
+    return res.status(400).json({ message: "Mobile number must be 10 digits" });
   }
   try {
     let result = await pool.query("SELECT * FROM users WHERE mobile = $1", [mobile]);
@@ -78,37 +67,42 @@ app.post("/login", async (req, res) => {
     });
     res.json({ message: "Login successful", user });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    console.error("/login error:", err);
+    res.status(500).json({ message: "Server error: " + err.message });
   }
 });
  
 // Signup route
 app.post('/signup', async (req, res) => {
   const { name, mobile, email, address } = req.body;
-
+  // Input validation
+  if (!name || !mobile || !email || !address) {
+    return res.status(400).json({ message: 'All fields (name, mobile, email, address) are required' });
+  }
+  if (!/^\d{10}$/.test(mobile)) {
+    return res.status(400).json({ message: 'Mobile number must be 10 digits' });
+  }
+  if (!/^\S+@\S+\.\S+$/.test(email)) {
+    return res.status(400).json({ message: 'Invalid email address' });
+  }
   try {
     // Check if user already exists by mobile or email
     const userExists = await pool.query(
       'SELECT * FROM users WHERE mobile = $1 OR email = $2',
       [mobile, email]
     );
-
     if (userExists.rows.length > 0) {
       return res.status(400).json({ message: 'User already exists with given mobile or email' });
     }
-
     // Insert new user
     await pool.query(
       'INSERT INTO users (name, mobile, email, address) VALUES ($1, $2, $3, $4)',
       [name, mobile, email, address]
     );
-
     res.status(201).json({ message: 'User registered successfully' });
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("/signup error:", error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
   }
 });
 
@@ -194,6 +188,7 @@ app.post('/logout', (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out successfully" });
 });
+
 
 
 

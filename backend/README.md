@@ -35,30 +35,22 @@ This project is designed primarily for **learning purposes**—to help you under
    git clone <your-repo-url>
    cd Truecaller-Based JWT Authentication System/truecaller_login_api
    ```
-2. **Build and run the Docker containers:**
+2. **Create a `.env` file in the backend directory:**
+   ```
+   DATABASE_URL=postgresql://postgres:admin404@localhost:5432/Truecaller_Based_JWT_db
+   JWT_SECRET=your_jwt_secret_here
+   JWT_EXPIRES_IN=90d
+   PORT=5000
+   ```
+   - Replace `your_jwt_secret_here` with a strong secret string.
+   - Ensure the database name, user, and password match your Docker/Postgres setup.
+3. **Build and run the Docker containers:**
    ```sh
    docker-compose up --build
    ```
-3. **Initialize the database:**
-   - Access the PostgreSQL container:
-     ```sh
-     docker exec -it truecaller_login_api_db_1 psql -U postgres
-     ```
-   - Create the database and user:
-     ```sql
-     CREATE DATABASE truecaller_db;
-     CREATE USER truecaller_user WITH ENCRYPTED PASSWORD 'password';
-     GRANT ALL PRIVILEGES ON DATABASE truecaller_db TO truecaller_user;
-     ```
-   - Exit the PostgreSQL prompt:
-     ```sql
-     \q
-     ```
-4. **Import the initial data (optional):**
-   - If you have an `init.sql` file with initial data, import it using:
-     ```sh
-     docker exec -i truecaller_login_api_db_1 psql -U postgres -d truecaller_db < init.sql
-     ```
+4. **Database Table Creation:**
+   - The backend will automatically check for and create the `users` table on startup. **You do not need to manually run any SQL.**
+   - If the table already exists, nothing will be changed.
 5. **Access the API:**
    - The API should be running at `http://localhost:5000`. Check the Swagger docs at `http://localhost:5000/api-docs`.
 
@@ -66,7 +58,18 @@ This project is designed primarily for **learning purposes**—to help you under
 
 API documentation is available via Swagger UI. After starting the project, access it at `http://localhost:5000/api-docs`.
 
+---
 
+## Troubleshooting
+
+- **500 Internal Server Error on Signup/Login:**
+  - Ensure your `.env` file is present and correct.
+  - Make sure PostgreSQL is running and accessible at the address in `DATABASE_URL`.
+  - The backend will auto-create the `users` table if it does not exist.
+  - Check the backend terminal for detailed error logs.
+- **Frontend not connecting:**
+  - Make sure the backend is running at `http://127.0.0.1:5000` and CORS is enabled.
+  - Open `frontend/index.html` in your browser and use the app.
 
 ---
 
